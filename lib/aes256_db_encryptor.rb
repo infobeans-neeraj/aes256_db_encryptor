@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "aes256_db_encryptor/version"
+require_relative "aes256_db_encryptor/configuration"
 require 'active_support/concern'
 require 'active_record'
 
@@ -21,11 +22,19 @@ module AES256DBEncryptor
     end
 
     def generate_aes_key
-      OpenSSL::Cipher.new('AES-256-CBC').random_key
+      # Generate a random AES-256 key
+      encryption_key = OpenSSL::Cipher.new('AES-256-CBC').random_key
+
+      # Base64 encode the encryption key for storage
+      encoded_key = Base64.strict_encode64(encryption_key)
     end
 
     def generate_aes_iv
-      OpenSSL::Cipher.new('AES-256-CBC').random_iv
+      # Generate a random AES-256 iv
+      encryption_iv = OpenSSL::Cipher.new('AES-256-CBC').random_iv
+
+      # Base64 encode the encryption iv for storage
+      encoded_iv = Base64.strict_encode64(encryption_iv)
     end
   end
 
@@ -35,9 +44,9 @@ module AES256DBEncryptor
         attributes.each do |attr|
           value = self[attr]
           if AES256DBEncryptor.encryption_mode == :double
-            self[attr] = AES256DBEncryptor::DoubleEncryption.encrypt(value, encryption_key1, encryption_key2, iv) if value.present?
+            self[attr] = AES256DBEncryptor::DoubleEncryption.encrypt(value) if value.present?
           else
-            self[attr] = AES256DBEncryptor::SingleEncryption.encrypt(value, encryption_key, iv) if value.present?
+            self[attr] = AES256DBEncryptor::SingleEncryption.encrypt(value) if value.present?
           end
         end
       end
@@ -46,9 +55,9 @@ module AES256DBEncryptor
         attributes.each do |attr|
           value = self[attr]
           if AES256DBEncryptor.encryption_mode == :double
-            self[attr] = AES256DBEncryptor::DoubleEncryption.decrypt(value, encryption_key1, encryption_key2, iv) if value.present?
+            self[attr] = AES256DBEncryptor::DoubleEncryption.decrypt(value) if value.present?
           else
-            self[attr] = AES256DBEncryptor::SingleEncryption.decrypt(value, encryption_key, iv) if value.present?
+            self[attr] = AES256DBEncryptor::SingleEncryption.decrypt(value) if value.present?
           end
         end
       end

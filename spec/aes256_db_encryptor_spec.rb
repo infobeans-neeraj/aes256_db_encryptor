@@ -8,16 +8,18 @@ RSpec.describe AES256DBEncryptor do
     context 'when encryption_mode is :double' do
       before do
         AES256DBEncryptor.configure { |config| config.encryption_mode = :double }
+        AES256DBEncryptor::Configuration.setup do
+          self.encryption_key = AES256DBEncryptor.generate_aes_key
+          self.encryption_iv = AES256DBEncryptor.generate_aes_iv
+          self.second_encryption_key = AES256DBEncryptor.generate_aes_key
+          self.second_encryption_iv = AES256DBEncryptor.generate_aes_iv
+        end
       end
 
       it 'correctly encrypts and decrypts data using double encryption' do
         plaintext = 'secret data'
-        key1 = AES256DBEncryptor.generate_aes_key
-        key2 = AES256DBEncryptor.generate_aes_key
-        iv = AES256DBEncryptor.generate_aes_iv
-
-        encrypted_data = AES256DBEncryptor::DoubleEncryption.encrypt(plaintext, key1, key2, iv)
-        decrypted_data = AES256DBEncryptor::DoubleEncryption.decrypt(encrypted_data, key1, key2, iv)
+        encrypted_data = AES256DBEncryptor::DoubleEncryption.encrypt(plaintext)
+        decrypted_data = AES256DBEncryptor::DoubleEncryption.decrypt(encrypted_data)
 
         expect(decrypted_data).to eq(plaintext)
       end
@@ -26,15 +28,16 @@ RSpec.describe AES256DBEncryptor do
     context 'when encryption_mode is :single' do
       before do
         AES256DBEncryptor.configure { |config| config.encryption_mode = :single }
+        AES256DBEncryptor::Configuration.setup do
+          self.encryption_key = AES256DBEncryptor.generate_aes_key
+          self.encryption_iv = AES256DBEncryptor.generate_aes_iv
+        end
       end
 
       it 'correctly encrypts and decrypts data using single encryption' do
         plaintext = 'secret data'
-        key = AES256DBEncryptor.generate_aes_key
-        iv = AES256DBEncryptor.generate_aes_iv
-
-        encrypted_data = AES256DBEncryptor::SingleEncryption.encrypt(plaintext, key, iv)
-        decrypted_data = AES256DBEncryptor::SingleEncryption.decrypt(encrypted_data, key, iv)
+        encrypted_data = AES256DBEncryptor::SingleEncryption.encrypt(plaintext)
+        decrypted_data = AES256DBEncryptor::SingleEncryption.decrypt(encrypted_data)
 
         expect(decrypted_data).to eq(plaintext)
       end
