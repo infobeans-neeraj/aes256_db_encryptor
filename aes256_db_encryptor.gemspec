@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
   spec.add_dependency "rails", ">= 5.0"
+  spec.add_dependency "activerecord"
   spec.add_dependency "openssl"
   spec.add_dependency "base64"
   spec.add_development_dependency "rspec"

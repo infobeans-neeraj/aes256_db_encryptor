@@ -2,6 +2,7 @@
 
 require_relative "aes256_db_encryptor/version"
 require 'active_support/concern'
+require 'active_record'
 
 module AES256DBEncryptor
   extend ActiveSupport::Concern
@@ -57,6 +58,8 @@ module AES256DBEncryptor
     end
   end
 end
+
+ActiveRecord::Base.send(:include, AES256DBEncryptor)
 
 require 'aes256_db_encryptor/double_encryption'
 require 'aes256_db_encryptor/single_encryption'
