@@ -1,31 +1,48 @@
-# Aes256DbEncryptor
+# AES256 DB Encryptor
 
-TODO: Delete this and the text below, and describe your gem
+This gem help you to encrypt and decrypt data using AES 256 encryption in a Ruby on Rails application. AES (Advanced Encryption Standard) is a symmetric encryption algorithm widely used for securing sensitive data.
+## Supported versions
+   - Ruby 2.6, 2.7, 3.0, 3.1
+   - Rails 5.2, 6.0, 6.1, 7.0
+## Install
+      gem 'attr_encrypted', git: 'https://github.com/infobeans-neeraj/aes256_db_encryptor.git', branch: 'master'
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/aes256_db_encryptor`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Generate Encryption Keys & IVs:
+**Generate a secure encryption key and iv to enable single encryption**
+    
+    encryption_key = AES256DBEncryptor.generate_aes_key
+    encryption_iv = AES256DBEncryptor.generate_aes_iv
 
-## Installation
+**Generate double encryption keys and iv to enable double encryption**
+    
+    encryption_key = AES256DBEncryptor.generate_aes_key
+    encryption_iv = AES256DBEncryptor.generate_aes_iv
+    second_encryption_key = AES256DBEncryptor.generate_aes_key
+    second_encryption_iv = AES256DBEncryptor.generate_aes_iv
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+> [!NOTE]
+> Store these keys securely and do not hard-code it in your application code.
 
-Install the gem and add to the application's Gemfile by executing:
+## Configuration:
+Create **aes256_db_encryptor.rb** file under initializers directory and add configuration.
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Add **require 'aes256_db_encryptor'** inside aes256_db_encryptor.rb.
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+**Configure encryption key and iv for single encryption**
+![image](https://github.com/user-attachments/assets/d53d016f-5064-4bf4-a62d-5f369bbc9008)
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+**Configure double Keys and IVs for double encryption**
+![image](https://github.com/user-attachments/assets/80a316eb-204f-4701-8adc-369688fa05b0)
+
+**Enable single encryption/double encryption**
+![image](https://github.com/user-attachments/assets/6302d394-0f58-4c64-a601-9d42531b4c36)
+
+> [!NOTE]
+> No need to add any configuration for single encryption. Single encryption enabled by default.
 
 ## Usage
+Add **aes_encrypt** inside your model and pass all the columns needs to encrypt.
 
-TODO: Write usage instructions here
+![image](https://github.com/user-attachments/assets/5155b82d-570a-48c3-8529-af4db371d935)
 
-## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/aes256_db_encryptor.
