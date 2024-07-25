@@ -10,8 +10,8 @@ module AES256DBEncryptor
     def encrypt(plaintext)
       cipher = OpenSSL::Cipher.new('AES-256-CBC')
       cipher.encrypt
-      cipher.key = key
-      cipher.iv = iv
+      cipher.key = AES256DBEncryptor::Configuration.encryption_key
+      cipher.iv = AES256DBEncryptor::Configuration.encryption_iv
 
       encrypted_data = cipher.update(plaintext) + cipher.final
       Base64.strict_encode64(encrypted_data)
@@ -22,8 +22,8 @@ module AES256DBEncryptor
     def decrypt(ciphertext)
       decipher = OpenSSL::Cipher.new('AES-256-CBC')
       decipher.decrypt
-      decipher.key = key
-      decipher.iv = iv
+      decipher.key = AES256DBEncryptor::Configuration.encryption_key
+      decipher.iv = AES256DBEncryptor::Configuration.encryption_iv
 
       plaintext = decipher.update(Base64.strict_decode64(ciphertext)) + decipher.final
       plaintext.force_encoding('UTF-8')
