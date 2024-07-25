@@ -5,7 +5,7 @@ This gem help you to encrypt and decrypt data using AES 256 encryption in a Ruby
    - Ruby 2.6, 2.7, 3.0, 3.1
    - Rails 5.2, 6.0, 6.1, 7.0
 ## Install
-      gem 'attr_encrypted', git: 'https://github.com/infobeans-neeraj/aes256_db_encryptor.git', branch: 'master'
+      gem 'aes256_db_encryptor', git: 'https://github.com/infobeans-neeraj/aes256_db_encryptor.git', branch: 'master'
 
 ## Generate Encryption Keys & IVs:
 **Generate a secure encryption key and iv to enable single encryption**
