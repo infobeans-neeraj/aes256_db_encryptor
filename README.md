@@ -34,7 +34,7 @@ Add **require 'aes256_db_encryptor'** inside aes256_db_encryptor.rb.
 **Configure double Keys and IVs for double encryption**
 ![image](https://github.com/user-attachments/assets/80a316eb-204f-4701-8adc-369688fa05b0)
 
-**Enable single encryption/double encryption**
+**Enable single/double encryption**
 ![image](https://github.com/user-attachments/assets/6302d394-0f58-4c64-a601-9d42531b4c36)
 
 > [!NOTE]
