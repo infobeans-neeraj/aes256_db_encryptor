@@ -2,8 +2,12 @@
 
 require_relative "aes256_db_encryptor/version"
 require_relative "aes256_db_encryptor/configuration"
+require_relative "aes256_db_encryptor/global_helpers"
 require 'active_support/concern'
 require 'active_record'
+
+# Load the generator
+require "aes256_db_encryptor/generators/pem_file_generator"
 
 module AES256DBEncryptor
   extend ActiveSupport::Concern
