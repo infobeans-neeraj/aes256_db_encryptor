@@ -5,21 +5,23 @@ require 'base64'
 
 module AES256DBEncryptor
   module DoubleEncryption
+    include AES256DBEncryptor::GlobalHelpers
     extend self
 
     def encrypt(plaintext)
+      keys_and_ivs = load_keys_and_ivs
       cipher = OpenSSL::Cipher.new('AES-256-CBC')
       cipher.encrypt
-      cipher.key = AES256DBEncryptor::Configuration.encryption_key
-      cipher.iv = AES256DBEncryptor::Configuration.encryption_iv
+      cipher.key = keys_and_ivs[:key1]
+      cipher.iv = keys_and_ivs[:iv1]
 
       encrypted_data = cipher.update(plaintext) + cipher.final
 
       # Encrypt again with the second key
       second_cipher = OpenSSL::Cipher.new('AES-256-CBC')
       second_cipher.encrypt
-      second_cipher.key = AES256DBEncryptor::Configuration.second_encryption_key
-      second_cipher.iv = AES256DBEncryptor::Configuration.second_encryption_iv
+      second_cipher.key = keys_and_ivs[:key2]
+      second_cipher.iv = keys_and_ivs[:iv2]
 
       doubly_encrypted_data = second_cipher.update(encrypted_data) + second_cipher.final
 
@@ -29,18 +31,19 @@ module AES256DBEncryptor
     end
 
     def decrypt(ciphertext)
+      keys_and_ivs = load_keys_and_ivs
       decipher = OpenSSL::Cipher.new('AES-256-CBC')
       decipher.decrypt
-      decipher.key = AES256DBEncryptor::Configuration.second_encryption_key # Decrypt with the second key first
-      decipher.iv = AES256DBEncryptor::Configuration.second_encryption_iv
+      decipher.key = keys_and_ivs[:key2] # Decrypt with the second key first
+      decipher.iv = keys_and_ivs[:iv2]
 
       decrypted_data = decipher.update(Base64.strict_decode64(ciphertext)) + decipher.final
 
       # Decrypt again with the first key
       second_decipher = OpenSSL::Cipher.new('AES-256-CBC')
       second_decipher.decrypt
-      second_decipher.key = AES256DBEncryptor::Configuration.encryption_key
-      second_decipher.iv = AES256DBEncryptor::Configuration.encryption_iv
+      second_decipher.key = keys_and_ivs[:key1]
+      second_decipher.iv = keys_and_ivs[:iv1]
 
       plaintext = second_decipher.update(decrypted_data) + second_decipher.final
       plaintext.force_encoding('UTF-8')
