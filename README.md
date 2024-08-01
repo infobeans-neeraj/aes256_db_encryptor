@@ -7,7 +7,8 @@ This gem help you to encrypt and decrypt data using AES 256 encryption in a Ruby
 ## Install
       gem 'aes256_db_encryptor', git: 'https://github.com/infobeans-neeraj/aes256_db_encryptor.git', branch: 'master'
 
-## Generate Encryption Keys & IVs:
+## Configure Encryption Keys & IVs through pem/environment  variables:
+### Generate Encryption Keys & IVs through environment  variables:
 **Generate a secure encryption key and iv to enable single encryption**
     
     encryption_key = AES256DBEncryptor.generate_aes_key
@@ -19,9 +20,18 @@ This gem help you to encrypt and decrypt data using AES 256 encryption in a Ruby
     encryption_iv = AES256DBEncryptor.generate_aes_iv
     second_encryption_key = AES256DBEncryptor.generate_aes_key
     second_encryption_iv = AES256DBEncryptor.generate_aes_iv
+### Generate Encryption Keys & IVs through pem:
+Before going to generate pem file set up **AES256_MASTER_KEY** environment variable to encrypt/decrypt pem data for security purpose**
+
+    Generate key using AES256DBEncryptor.generate_aes_key
+    Set AES256_MASTER_KEY enviornment variable
+
+### Run below command on your project directory to generate pem file:
+    bin/rails generate encryptor:pem_file
 
 > [!NOTE]
 > Store these keys securely and do not hard-code it in your application code.
+
 
 ## Configuration:
 Create **aes256_db_encryptor.rb** file under initializers directory and add configuration.
@@ -39,6 +49,7 @@ Add **require 'aes256_db_encryptor'** inside aes256_db_encryptor.rb.
 
 > [!NOTE]
 > No need to add any configuration for single encryption. Single encryption enabled by default.
+> No need to add any enviornment variable if you are generating pem file.
 
 ## Usage
 Add **aes_encrypt** inside your model and pass all the columns needs to encrypt.
