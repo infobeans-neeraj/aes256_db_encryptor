@@ -1,12 +1,12 @@
 module AES256DBEncryptor
   module GlobalHelpers
     extend ActiveSupport::Concern
-    MASTER_KEY_ENV_VAR = 'AES256_MASTER_KEY'
+    MASTER_KEY_ENV_VAR = 'AES_MASTER_KEY'
     PEM_FILE_PATH = 'config/keys_and_ivs.pem'
 
     def fetch_master_key
       raise "Master key environment variable #{MASTER_KEY_ENV_VAR} not set" unless ENV[MASTER_KEY_ENV_VAR]
-      Base64.decode64(ENV['AES256_MASTER_KEY'])
+      Base64.decode64(ENV[MASTER_KEY_ENV_VAR])
     end
 
     def load_keys_and_ivs

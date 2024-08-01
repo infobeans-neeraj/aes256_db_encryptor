@@ -21,10 +21,10 @@ This gem help you to encrypt and decrypt data using AES 256 encryption in a Ruby
     second_encryption_key = AES256DBEncryptor.generate_aes_key
     second_encryption_iv = AES256DBEncryptor.generate_aes_iv
 ### Generate Encryption Keys & IVs through pem:
-Before going to generate pem file set up **AES256_MASTER_KEY** environment variable to encrypt/decrypt pem data for security purpose**
+Before going to generate pem file set up **AES_MASTER_KEY** environment variable to encrypt/decrypt pem data for security purpose**
 
     Generate key using AES256DBEncryptor.generate_aes_key
-    Set AES256_MASTER_KEY enviornment variable
+    Set AES_MASTER_KEY enviornment variable
 
 ### Run below command on your project directory to generate pem file:
     bin/rails generate encryptor:pem_file
