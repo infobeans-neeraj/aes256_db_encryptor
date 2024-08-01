@@ -10,44 +10,28 @@ module AES256DBEncryptor
 
     def encrypt(plaintext)
       keys_and_ivs = load_keys_and_ivs
-      cipher = OpenSSL::Cipher.new('AES-256-CBC')
-      cipher.encrypt
-      cipher.key = keys_and_ivs[:key1]
-      cipher.iv = keys_and_ivs[:iv1]
-
-      encrypted_data = cipher.update(plaintext) + cipher.final
+      encrypted_data = encrypt_data(plaintext, keys_and_ivs[:key1], keys_and_ivs[:iv1])
 
       # Encrypt again with the second key
-      second_cipher = OpenSSL::Cipher.new('AES-256-CBC')
-      second_cipher.encrypt
-      second_cipher.key = keys_and_ivs[:key2]
-      second_cipher.iv = keys_and_ivs[:iv2]
-
-      doubly_encrypted_data = second_cipher.update(encrypted_data) + second_cipher.final
+      doubly_encrypted_data = encrypt_data(encrypted_data, keys_and_ivs[:key2], keys_and_ivs[:iv2])
 
       Base64.strict_encode64(doubly_encrypted_data)
     rescue StandardError => e
+      Rails.logger.info("An error occurred while encrypting data: #{e.message}")
       plaintext
     end
 
     def decrypt(ciphertext)
       keys_and_ivs = load_keys_and_ivs
-      decipher = OpenSSL::Cipher.new('AES-256-CBC')
-      decipher.decrypt
-      decipher.key = keys_and_ivs[:key2] # Decrypt with the second key first
-      decipher.iv = keys_and_ivs[:iv2]
 
-      decrypted_data = decipher.update(Base64.strict_decode64(ciphertext)) + decipher.final
+      # Decrypt with the second key first
+      decrypted_data = decrypt_data(ciphertext, keys_and_ivs[:key2], keys_and_ivs[:iv2])
 
       # Decrypt again with the first key
-      second_decipher = OpenSSL::Cipher.new('AES-256-CBC')
-      second_decipher.decrypt
-      second_decipher.key = keys_and_ivs[:key1]
-      second_decipher.iv = keys_and_ivs[:iv1]
-
-      plaintext = second_decipher.update(decrypted_data) + second_decipher.final
+      plaintext = decrypt_data(decrypted_data, keys_and_ivs[:key1], keys_and_ivs[:iv1], method: 1)
       plaintext.force_encoding('UTF-8')
     rescue StandardError => e
+      Rails.logger.info("An error occurred while decrypting data: #{e.message}")
       ciphertext
     end
   end

@@ -10,27 +10,19 @@ module AES256DBEncryptor
 
     def encrypt(plaintext)
       keys_and_ivs = load_keys_and_ivs
-      cipher = OpenSSL::Cipher.new('AES-256-CBC')
-      cipher.encrypt
-      cipher.key = keys_and_ivs[:key1]
-      cipher.iv = keys_and_ivs[:iv1]
-
-      encrypted_data = cipher.update(plaintext) + cipher.final
+      encrypted_data = encrypt_data(plaintext, keys_and_ivs[:key1], keys_and_ivs[:iv1])
       Base64.strict_encode64(encrypted_data)
     rescue StandardError => e
+      Rails.logger.info("An error occurred while encrypting data: #{e.message}")
       plaintext
     end
 
     def decrypt(ciphertext)
       keys_and_ivs = load_keys_and_ivs
-      decipher = OpenSSL::Cipher.new('AES-256-CBC')
-      decipher.decrypt
-      decipher.key = keys_and_ivs[:key1]
-      decipher.iv = keys_and_ivs[:iv1]
-
-      plaintext = decipher.update(Base64.strict_decode64(ciphertext)) + decipher.final
+      plaintext = decrypt_data(ciphertext, keys_and_ivs[:key1], keys_and_ivs[:iv1])
       plaintext.force_encoding('UTF-8')
     rescue StandardError => e
+      Rails.logger.info("An error occurred while decrypting data: #{e.message}")
       ciphertext
     end
   end
