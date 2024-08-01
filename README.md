@@ -48,8 +48,8 @@ Add **require 'aes256_db_encryptor'** inside aes256_db_encryptor.rb.
 ![image](https://github.com/user-attachments/assets/6302d394-0f58-4c64-a601-9d42531b4c36)
 
 > [!NOTE]
-> No need to add any configuration for single encryption. Single encryption enabled by default.
-> No need to add any enviornment variable if you are generating pem file.
+> - No need to add any configuration for single encryption. Single encryption enabled by default.
+> - No need to add any enviornment variable if you are generating pem file.
 
 ## Usage
 Add **aes_encrypt** inside your model and pass all the columns needs to encrypt.
